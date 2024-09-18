@@ -1,0 +1,78 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.overall{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container{
+    width: 600px;
+    padding: 10px;
+    /* border: 1px solid black; */
+    background-color: #D8EFD3;
+}
+.container>h1{
+    margin: 0 0 20px;
+}
+.container>select{
+    margin: 0 0 80px;
+}
+table,th,tr{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+tr,th,td{
+    border: 1px solid black;
+    width: 200px;
+    /* padding: 10px; */
+}
+th{
+    font-size: 1.3rem;
+}
+td{
+    padding: 20px;
+}
+td input{
+    height: 40px;
+    padding: 10px;
+    outline: none;
+    border: none;
+
+}
+table{
+    margin: 10px 0 20px;
+}
+select{
+    text-align: center;
+    padding: 10px;
+    height: 40px;
+    width: 100px;
+    outline: none ;
+    border: none;
+}
+#tax{
+    margin:  0 0 10px ;
+}
+button{
+    padding: 10px;
+    background-color: white;
+    border: none;
+    font-size: 1.07rem;
+}
+p{
+    font-size: 1.1rem;
+    margin: 0 0 8px;
+}
+a{
+    text-decoration: none;
+    height: 30px;
+    padding: 5px;
+    background-color: white;
+}
+#percentage{
+    margin: 0 0  10px;
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+            $(document).ready(function() {
+        // Function to populate options in the select dropdown
+        function populateSelectOptions() {
+            var select = $('#productSelect');
+            
+            $.each(options, function(index, option) {
+            select.append($('<option>').text(option.name).attr('value', index));
+            });
+        }
+
+        // Call the function to populate options initially
+        populateSelectOptions();
+
+        // Function to add a row to the table
+            function addTableRow(productName, price) {
+        // Check if the product already exists in the table
+        var exists = $('#productTable tbody tr').filter(function() {
+        return $(this).find('td:first-child').text() === productName;
+        }).length > 0;
+        console.log(exists);
+
+        // If the product does not exist, add a new row
+        if (!exists) {
+        var newRow = $('<tr>');
+        newRow.append($('<td>').text(productName));
+        newRow.append($('<td>').text(price));
+        newRow.append($('<td>').append($('<input>').attr('type', 'number').attr('required',true).attr({'min':'0'}).addClass('quantity-input')));
+
+        $('#productTable tbody').append(newRow);
+        }
+    }
+
+        // Event handler when an option is clicked
+        $('#productSelect').change(function() {
+            var selectedIndex = $(this).val();
+            var selectedOption = options[selectedIndex];
+            
+            addTableRow(selectedOption.name, selectedOption.price);
+        });
+        
+        $('#submitButton').click(function(){
+            var tableData = [];
+            $('#productTable tbody tr').each(function() {
+                
+                var productName = $(this).find('td:nth-child(1)').text();
+                var price = parseFloat($(this).find('td:nth-child(2)').text());
+                var quantity = parseInt($(this).find('.quantity-input').val(), 10);
+                tableData.push({ productName: productName, price: price, quantity: quantity });
+                });
+                console.log(tableData);
+
+                var grandTotal = 0;
+                var tableRows = '';
+                tableData.forEach(function(value,index) {
+                  console.log(value);
+                  console.log(index);
+                    var totalAmount = value.quantity * value.price;
+                    console.log(totalAmount);
+                    grandTotal += totalAmount;
+                    tableRows += `<tr>
+                        <td>${value.productName}</td>
+                        <td>${value.price}</td>
+                        <td>${value.quantity}</td>
+                        <td>${totalAmount}</td>
+                    </tr>`;
+                });
+                
+                var tax = $("#tax").val();
+                var percent=$('#percentage').val();
+                var taxAmount = 0;
+
+                if (tax == "IGST") {
+                    taxAmount = (grandTotal * (percent/2)) / 100;
+                    tableRows += `<tr><td colspan='3'>CGST(${percent/2}%)</td><td>${taxAmount}</td></tr>`;
+                    tableRows += `<tr><td colspan='3'>SGST(${percent/2}%)</td><td>${taxAmount}</td></tr>`;
+                    grandTotal += taxAmount * 2;
+                } 
+                if(tax == "SGST"){
+                    taxAmount = (grandTotal * percent) / 100;
+                    tableRows += `<tr><td colspan='3'>SGST(${percent}%)</td><td>${taxAmount}</td></tr>`;
+                    grandTotal += taxAmount;
+                }
+
+                tableRows += `<tr><td colspan='3'>Grand Total</td><td>${grandTotal}</td></tr>`;
+
+                var resultHtml = `
+                    <div class="overall">
+                      <div class="container">
+                          <h1>Grocery-Shop</h1>
+                          <div id='tablediv'>
+                              <table id='data-table' border='1'>
+                                  <thead>
+                                      <tr>
+                                          <th>Name</th>
+                                          <th>Price</th>
+                                          <th>Quantity</th>
+                                          <th>Total Amount</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      ${tableRows}
+                                  </tbody>
+                              </table>
+                              <a href='./index.html'> back </a>
+                          </div>
+                      </div>
+                    </div>
+                `;
+
+                $("body").html(resultHtml);
+        });
+
+              
+        
+        });
+
+    </script>
+</head>
+<body>
+    <div class="overall">
+        <div class="container">
+            <h1> Grocery Bill Making</h1>
+            <p> Product</p>
+            <select id="productSelect">
+                <option value=""> ---- </option>
+                <!-- Options will be dynamically added here -->
+              </select>
+              
+              <table id="productTable">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Rows will be dynamically added here -->
+                </tbody>
+              </table>
+              <p> Taxs</p>
+              <select id="tax">
+                <option value=""> ---- </option>
+                <option>SGST</option>
+                <option>IGST</option>
+            </select><br/>
+            <select id="percentage">
+              <option value=""> ---- </option>
+              <option value="14">14%</option>
+              <option value="12">12%</option>
+              <option value="10">10%</option>
+              <option value="8">8%</option>
+              <option value="6">6%</option>
+              
+          </select><br/>
+              <button id="submitButton">Submit</button>
+              
+              <script id="optionScript">
+                var options = [
+                  { name: "Biscuit", price: 50 },
+                  { name: "Brush", price: 30 },
+                  { name: "Paste", price: 100 },
+                  { name: "Snack", price: 150 }
+                ];
+              </script>
+              
+
+
+            
+        </div>
+    </div>
+</body>
+</html>
